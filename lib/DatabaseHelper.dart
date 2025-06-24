@@ -1,3 +1,4 @@
+
 import 'package:pertemuan3/PelangganModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -9,11 +10,11 @@ class DatabaseHelper {
   DatabaseHelper._init();
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    if  (_database != null) return  _database!;
     _database = await _initDB('data_pelanggan.db');
     return _database!;
-  }
 
+  }
   Future<Database> _initDB(String path) async {
     final dbPath = await getDatabasesPath();
     final pathToDb = join(dbPath, path);
@@ -22,29 +23,31 @@ class DatabaseHelper {
   }
 
   Future _onCreate(Database db, int version) async {
-    const String tableSql = ''' 
+    const String tableSql = '''
     CREATE TABLE pelanggan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT,
-    nik TEXT,
-    alamat TEXT,
-    no_hp TEXT,
-    jenis_paket TEXT,
-    lama_paket TEXT,
-    foto TEXT,
-    latitude REAL,
-    longitude REAL
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nama TEXT,
+      nik TEXT,
+      alamat TEXT,
+      no_hp TEXT,
+      email TEXT,
+      jenis_kelamin Text,
+      jenis_paket TEXT,
+      lama_paket TEXT,
+      foto TEXT,
+      latitude REAL,
+      longitude REAL 
     );
     ''';
     await db.execute(tableSql);
   }
 
-  Future<void> insertFormdata(PelangganModel formData) async {
+  Future<void> insertFormData(PelangganModel formData) async{
     final db = await instance.database;
     await db.insert('pelanggan', formData.toMap());
   }
 
-  Future<List<PelangganModel>> getAllPelanggan() async {
+  Future<List<PelangganModel>> getAllpelanggan() async {
     Database db = await database;
     var res = await db.query('pelanggan');
     List<PelangganModel> list =
@@ -54,18 +57,17 @@ class DatabaseHelper {
     return list;
   }
 
-  Future<int> deletePelanggan(int id) async {
+  Future<int> deletePelanggan(int id)async {
     final db = await database;
     return await db.delete('pelanggan', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> updatePelanggan(PelangganModel pelanggan) async {
+  Future<int> updatePelanggan(PelangganModel pelanggan)async{
     final db = await database;
     return await db.update(
-      'pelanggan',
-      pelanggan.toMap(),
-      where: 'id = ?',
-      whereArgs: [pelanggan.id],
-    );
+        'pelanggan',
+        pelanggan.toMap(),
+        where: 'id = ?',
+        whereArgs: [pelanggan.id]);
   }
 }
